@@ -25,6 +25,5 @@ Usage:
   ^It is very useful in learning the basics of the Python and helpful in doing many more projects based on Python.
   ^Web scraping knowledge.
   ^Installation of various libraries.
-License Information:
-  LICENSE.md
+
   
