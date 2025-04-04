@@ -1,0 +1,128 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "4410143a-539f-4fb5-8e32-883436c56961",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "    Player  Performance Score  Clean Picks  Good Throws  Catches  \\\n",
+      "0  Player1                  6            1            0        0   \n",
+      "1  Player2                  1            0            1        0   \n",
+      "2  Player3                 11            1            0        1   \n",
+      "\n",
+      "   Dropped Catches  Stumpings  Run Outs  Missed Run Outs  Direct Hits  \\\n",
+      "0                0          0         1                1            0   \n",
+      "1                1          0         1                1            0   \n",
+      "2                0          0         0                0            0   \n",
+      "\n",
+      "   Runs Saved/Conceded  \n",
+      "0                    1  \n",
+      "1                   -2  \n",
+      "2                    5  \n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "file_path = \"fielding_data_sample.csv\"  \n",
+    "df = pd.read_csv(file_path)\n",
+    "\n",
+    "weights = {\n",
+    "    \"CP\": 1,   \n",
+    "    \"GT\": 2,  \n",
+    "    \"C\": 5,    \n",
+    "    \"DC\": -3,  \n",
+    "    \"ST\": 4,   \n",
+    "    \"RO\": 6,   \n",
+    "    \"MRO\": -2, \n",
+    "    \"DH\": 3,   \n",
+    "}\n",
+    "def calculate_performance(player_name):\n",
+    "    player_data = df[df[\"Player Name\"] == player_name]\n",
+    "    \n",
+    "    # Count occu\n",
+    "    cp = len(player_data[player_data[\"Pick\"] == \"Clean Pick\"])\n",
+    "    gt = len(player_data[player_data[\"Pick\"] == \"Good Throw\"])\n",
+    "    c = len(player_data[player_data[\"Pick\"] == \"Catch\"])\n",
+    "    dc = len(player_data[player_data[\"Pick\"] == \"Drop Catch\"])\n",
+    "    st = len(player_data[player_data[\"Throw\"] == \"Stumping\"])\n",
+    "    ro = len(player_data[player_data[\"Throw\"] == \"Run Out\"])\n",
+    "    mro = len(player_data[player_data[\"Throw\"] == \"Missed Run Out\"])\n",
+    "    dh = len(player_data[player_data[\"Throw\"] == \"Direct Hit\"])\n",
+    "    \n",
+    "    # Calculate total runs saved/conceded\n",
+    "    rs = player_data[\"Runs\"].sum()\n",
+    "    \n",
+    "    # Compute Performance Score (PS)\n",
+    "    ps = (\n",
+    "        (cp * weights[\"CP\"]) + (gt * weights[\"GT\"]) + (c * weights[\"C\"]) +\n",
+    "        (dc * weights[\"DC\"]) + (st * weights[\"ST\"]) + (ro * weights[\"RO\"]) +\n",
+    "        (mro * weights[\"MRO\"]) + (dh * weights[\"DH\"]) + rs\n",
+    "    )\n",
+    "    \n",
+    "    return {\n",
+    "        \"Player\": player_name,\n",
+    "        \"Performance Score\": ps,\n",
+    "        \"Clean Picks\": cp,\n",
+    "        \"Good Throws\": gt,\n",
+    "        \"Catches\": c,\n",
+    "        \"Dropped Catches\": dc,\n",
+    "        \"Stumpings\": st,\n",
+    "        \"Run Outs\": ro,\n",
+    "        \"Missed Run Outs\": mro,\n",
+    "        \"Direct Hits\": dh,\n",
+    "        \"Runs Saved/Conceded\": rs\n",
+    "    }\n",
+    "\n",
+    "# List of players to analyze (Modify as needed)\n",
+    "players_to_analyze = [\"Player1\", \"Player2\", \"Player3\"]\n",
+    "\n",
+    "# Calculate performance scores for selected players\n",
+    "results = [calculate_performance(player) for player in players_to_analyze]\n",
+    "\n",
+    "# Convert results to DataFrame for display and export\n",
+    "results_df = pd.DataFrame(results)\n",
+    "print(results_df)\n",
+    "\n",
+    "# Save to CSV for further analysis\n",
+    "results_df.to_csv(\"fielding_performance_analysis.csv\", index=False)\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2b352e61-431a-44a6-96ab-b4c16a9e7b14",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
